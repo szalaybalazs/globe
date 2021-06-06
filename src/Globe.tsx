@@ -5,30 +5,35 @@ import * as THREE from "three";
 import WorldMap from "./Map";
 
 const DOT_RADIUS = 580;
-const DOT_COUNT = 12000;
+const DOT_COUNT = 30000;
 const green = 0xc1fdc3;
 const yellow = 0xf9c982;
+const globeColor = 0x101c45;
 
 const addFog = (scene: THREE.Scene) => {
   // Fog color
-  const color = green;
+  const color = globeColor;
 
   // Fog near plane
   const near = 1000;
 
   // Fog far plane
-  const far = 2500;
+  const far = 2200;
 
   // Main scene
   scene.fog = new THREE.Fog(color, near, far);
 };
 
 const addGlobe = (scene: THREE.Scene) => {
-  const globeGeometry = new THREE.SphereGeometry(DOT_RADIUS - 1, 250, 250);
+  const globeGeometry = new THREE.SphereGeometry(DOT_RADIUS - 20, 250, 250);
   const globeMaterial = new THREE.MeshStandardMaterial({
-    color: yellow,
+    color: globeColor,
+    opacity: 0.6,
+    transparent: true,
   });
+
   const globe = new THREE.Mesh(globeGeometry, globeMaterial);
+  globe.renderOrder = 1.0;
   scene.add(globe);
 };
 
@@ -58,25 +63,24 @@ const _handleLoad = async (wrapper: HTMLDivElement) => {
 
   // Create scene
   const { scene, camera, renderer, controls } = setupRenderer(wrapper);
-  addFog(scene);
+  // addFog(scene);
 
   // Create mesh group
   const group = new THREE.Group();
 
   // A hexagon with a radius of 2 pixels looks like a circle
-  const dotGeometry = new THREE.CircleGeometry(4, 25);
+  const dotGeometry = new THREE.CircleGeometry(3, 5);
   const ringGeometry = new THREE.RingGeometry(3, 4, 25);
   const material = new THREE.MeshStandardMaterial({
-    color: 0x000000,
+    color: yellow,
     side: THREE.DoubleSide,
+    transparent: true,
+    opacity: 0.8,
   });
   const activeMaterial = new THREE.LineBasicMaterial({
     color: 0x000000,
     side: THREE.DoubleSide,
   });
-
-  addGlobe(scene);
-
   const vector = new THREE.Vector3(0, 0, 0);
   for (let i = DOT_COUNT; i >= 0; i--) {
     const phi = Math.acos(-1 + (2 * i) / DOT_COUNT);
@@ -95,14 +99,26 @@ const _handleLoad = async (wrapper: HTMLDivElement) => {
       // Move the dot to the newly calculated position
       // dotGeometry.translate(vector.x, vector.y, vector.z);
       // dotGeometry.lookAt(new THREE.Vector3(0, 0, 0));
+      const material = new THREE.MeshStandardMaterial({
+        color: yellow,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: Math.random() / 2 + 0.25,
+      });
       const dotMesh =
         val > 120
           ? new THREE.Mesh(ringGeometry, material)
           : new THREE.Mesh(dotGeometry, material);
+
+      const scale = Math.random() / 2 + 0.5;
+      dotMesh.scale.x = scale;
+      dotMesh.scale.y = scale;
+      dotMesh.scale.z = scale;
       dotMesh.position.x = vector.x;
       dotMesh.position.y = vector.y;
       dotMesh.position.z = vector.z;
       dotMesh.lookAt(new THREE.Vector3(0, 0, 0));
+      dotMesh.renderOrder = 0.5;
       group.add(dotMesh);
     }
   }
@@ -122,6 +138,8 @@ const _handleLoad = async (wrapper: HTMLDivElement) => {
   }
 
   scene.add(group);
+
+  addGlobe(scene);
 
   controls.update();
   group.rotation.y = -Math.PI / 2;

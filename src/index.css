@@ -18,9 +18,5 @@ canvas {
 }
 
 div.globe-wrapper {
-  background: linear-gradient(
-    to right bottom,
-    rgb(193, 253, 195),
-    rgb(249, 241, 130)
-  );
+  background: linear-gradient(to right bottom, #081827, #081827);
 }
