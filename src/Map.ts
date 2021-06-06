@@ -33,13 +33,13 @@ export default class WorldMap {
 
   public getColor = (x: number, y: number) => {
     const context = this.canvas.getContext("2d");
-    const data = context?.getImageData(
+    if (!context) return 0;
+    const { data } = context.getImageData(
       Math.min(1, Math.max(0, x)) * 2754,
       Math.min(1, Math.max(0, y)) * 1397,
       1,
       1
     );
-
-    return data?.data?.[3] || 0;
+    return data?.[3] || 0;
   };
 }

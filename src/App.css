@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+div.globe-wrapper {
+  background: linear-gradient(to bottom right, ref, blue);
+}

@@ -7,7 +7,9 @@ import Globe from "./Globe";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Globe />
+    <div className="globe-wrapper">
+      <Globe />
+    </div>
   </React.StrictMode>,
   document.getElementById("root")
 );

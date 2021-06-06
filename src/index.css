@@ -16,3 +16,11 @@ canvas {
   width: 100vw !important;
   height: 100vh !important;
 }
+
+div.globe-wrapper {
+  background: linear-gradient(
+    to right bottom,
+    rgb(193, 253, 195),
+    rgb(249, 241, 130)
+  );
+}
